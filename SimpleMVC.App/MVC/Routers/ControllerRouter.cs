@@ -20,6 +20,9 @@ namespace SimpleMVC.App.MVC.Routers
         private string controllerName;
         private object[] methodParams;
 
+        private string[] controllerActionParams;
+        private string[] controllerAction;
+
         public ControllerRouter()
         {
             this.getParams = new Dictionary<string, string>();
@@ -45,6 +48,16 @@ namespace SimpleMVC.App.MVC.Routers
                     this.methodParams[index] = Convert.ChangeType(
                         value,
                         parameter.ParameterType);
+                    index++;
+                }
+                else if (parameter.ParameterType == typeof(HttpRequest) )
+                {
+                    this.methodParams[index] = request;
+                    index++;
+                }
+                else if (parameter.ParameterType == typeof(HttpSession))
+                {
+                    this.methodParams[index] = request.Session.Id;
                     index++;
                 }
                 else

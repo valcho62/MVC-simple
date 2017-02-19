@@ -45,6 +45,8 @@
   <ItemGroup>
     <Compile Include="AppStart.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Models\GreetViewModel.cs" />
     <Compile Include="MVC\Attributes\Methods\HttpGetAttribute.cs" />
     <Compile Include="MVC\Attributes\Methods\HttpMethodAttribute.cs" />
     <Compile Include="MVC\Attributes\Methods\HttpPostAttribute.cs" />
@@ -63,6 +65,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RouteTable.cs" />
     <Compile Include="Views\Home\Index.cs" />
+    <Compile Include="Views\Users\Great.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -73,9 +76,7 @@
       <Name>SimpleHttpServer</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
