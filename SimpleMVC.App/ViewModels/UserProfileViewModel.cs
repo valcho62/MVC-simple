@@ -8,6 +8,6 @@ namespace SimpleMVC.App.ViewModels
     {
         public string Username { get; set; }
         public int UserId { get; set; }
-        public ICollection<NoteViewModel> Notes { get; set; }
+        public IEnumerable<NoteViewModel> Notes { get; set; }
     }
 }

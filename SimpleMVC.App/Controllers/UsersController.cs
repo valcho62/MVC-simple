@@ -39,10 +39,15 @@ namespace SimpleMVC.App.Controllers
             {
                 Username = user.Username,
                 UserId = user.Id,
-                //Notes = user.Notes
-                
-            };
+                Notes = user.Notes
+                .Select(x => new NoteViewModel()
+                {
+                    Title = x.Title,
+                    Content = x.Content
+                }).ToList()
 
+        };
+           
             return this.View(model);
         }
         [HttpGet]
