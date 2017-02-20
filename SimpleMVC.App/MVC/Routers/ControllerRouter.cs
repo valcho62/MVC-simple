@@ -19,19 +19,18 @@ namespace SimpleMVC.App.MVC.Routers
         private string actionName;
         private string controllerName;
         private object[] methodParams;
-
-        private string[] controllerActionParams;
-        private string[] controllerAction;
+       
 
         public ControllerRouter()
         {
             this.getParams = new Dictionary<string, string>();
             this.postParams = new Dictionary<string, string>();
+            
         }
         public HttpResponse Handle(HttpRequest request)
         {
-            this.getParams = GetParams(request.Url);
-            this.postParams = GetParams(request.Content);
+            this.getParams = GetGetParams(request.Url);
+            this.postParams = GetPostParams(request.Content);
             this.requestMethod = request.Method.ToString();
             ParseContrAndActionName(request.Url);
 
@@ -39,6 +38,9 @@ namespace SimpleMVC.App.MVC.Routers
 
             IEnumerable<ParameterInfo> parameters =
                 method.GetParameters();
+            
+            this.methodParams
+                = new object[parameters.Count()];
             int index = 0;
             foreach (ParameterInfo parameter in parameters)
             {
@@ -50,14 +52,14 @@ namespace SimpleMVC.App.MVC.Routers
                         parameter.ParameterType);
                     index++;
                 }
-                else if (parameter.ParameterType == typeof(HttpRequest) )
+                else if (parameter.ParameterType == typeof(HttpRequest))
                 {
                     this.methodParams[index] = request;
                     index++;
                 }
                 else if (parameter.ParameterType == typeof(HttpSession))
                 {
-                    this.methodParams[index] = request.Session.Id;
+                    this.methodParams[index] = request.Session;
                     index++;
                 }
                 else
@@ -96,6 +98,25 @@ namespace SimpleMVC.App.MVC.Routers
             };
 
             return response;
+        }
+
+        private IDictionary<string, string> GetPostParams(string requestContent)
+        {
+            var result = new Dictionary<string, string>();
+            if (requestContent != null)
+            {
+                
+                var allParams = requestContent.Split('&');
+                foreach (var param in allParams)
+                {
+                    var name = param.Split('=')[0];
+                    var value = param.Split('=')[1];
+                    result.Add(name, value);
+                }
+            }
+            
+
+            return result;
         }
 
         private Controller GetController()
@@ -159,21 +180,21 @@ namespace SimpleMVC.App.MVC.Routers
 
         }
 
-        private IDictionary<string, string> GetParams(string requestUrl)
+        private IDictionary<string, string> GetGetParams(string requestUrl)
         {
             var result = new Dictionary<string,string>();
-            if (requestUrl == null || requestUrl.Split('?').Length < 2)
+            if (requestUrl.Contains("?"))
             {
-                return result;
+                var stringParams = requestUrl.Split('?')[1];
+                var allParams = stringParams.Split('&');
+                foreach (var param in allParams)
+                {
+                    var name = param.Split('=')[0];
+                    var value = param.Split('=')[1];
+                    result.Add(name, value);
+                }
             }
-            var stringParams = requestUrl.Split('?')[1];
-            var allParams = stringParams.Split('&');
-            foreach (var param in allParams)
-            {
-                var name = param.Split('=')[0];
-                var value = param.Split('=')[1];
-                result.Add(name,value);
-            }
+            
 
             return result;
         }
